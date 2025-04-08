@@ -1,0 +1,10 @@
+.vscode/
+logs/
+node_modules/
+dist-server/
+*/build/
+rabbitmq.conf
+*.env
+*.pem
+
+!sample.env

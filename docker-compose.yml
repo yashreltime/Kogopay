@@ -1,0 +1,25 @@
+version: "3"
+services:
+  rabbitmq:
+    container_name: ecosystem-rabbitmq
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq-backend"
+    ports:
+      - "15677:15672"
+      - "5677:5672"
+      - "1888:1883"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  api:
+    container_name: ecosystem_backend_dev
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    network_mode: host
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    env_file:
+      - .env

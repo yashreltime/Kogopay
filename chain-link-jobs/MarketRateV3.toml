@@ -1,0 +1,41 @@
+type = "cron"
+schemaVersion = 1
+name = "Market Rate-SWAP-V3"
+maxTaskDuration = "0s"
+schedule = "CRON_TZ=UTC @every 14m"
+observationSource = """
+    fetch_mxn    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=MXN&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_inr    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=INR&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_nok    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=NOK&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_sek    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=SEK&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_dkk    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=DKK&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_kyd    [type="http" method=GET url="https://free.currconv.com/api/v7/convert?q=USD_KYD&compact=ultra&apiKey=8a8525be3cd24cdc981c"]
+    parse_mxn    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_mxn)"]
+    parse_inr    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_inr)"]
+    parse_nok    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_nok)"]
+    parse_sek    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_sek)"]
+    parse_dkk    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_dkk)"]
+    parse_kyd    [type="jsonparse" path="USD_KYD" data="$(fetch_kyd)"]
+    multiply_mxn    [type="multiply" input="$(parse_mxn)" times=1000000000000000000]
+    multiply_inr    [type="multiply" input="$(parse_inr)" times=1000000000000000000]
+    multiply_nok    [type="multiply" input="$(parse_nok)" times=1000000000000000000]
+    multiply_sek    [type="multiply" input="$(parse_sek)" times=1000000000000000000]
+    multiply_dkk    [type="multiply" input="$(parse_dkk)" times=1000000000000000000]
+    multiply_kyd    [type="multiply" input="$(parse_kyd)" times=1000000000000000000]
+    encode_data  [type="ethabiencode"
+                  abi="(uint256 mxn,uint256 inr,uint256 nok,uint256 sek,uint256 dkk,uint256 kyd)"
+                  data="{ \\"mxn\\": $(multiply_mxn),\\"inr\\": $(multiply_inr),\\"nok\\": $(multiply_nok),\\"sek\\": $(multiply_sek),\\"dkk\\": $(multiply_dkk),\\"kyd\\": $(multiply_kyd) }"]
+    encode_tx    [type="ethabiencode"
+                  abi="fulfillMarketRateV3(bytes data)"
+                  data="{\\"data\\": $(encode_data)}"
+                 ]
+    submit_tx    [type="ethtx" to="0xE37740926636d4b4ba8D9EBdaA5E0081a985425A" data="$(encode_tx)"]
+
+    fetch_mxn -> parse_mxn -> multiply_mxn -> encode_data
+    fetch_inr -> parse_inr -> multiply_inr -> encode_data
+    fetch_nok -> parse_nok -> multiply_nok -> encode_data
+    fetch_sek -> parse_sek -> multiply_sek -> encode_data
+    fetch_dkk -> parse_dkk -> multiply_dkk -> encode_data
+    fetch_kyd -> parse_kyd -> multiply_kyd -> encode_data
+    encode_data -> encode_tx -> submit_tx
+"""

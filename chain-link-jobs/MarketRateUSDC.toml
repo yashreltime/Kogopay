@@ -1,0 +1,18 @@
+type = "cron"
+schemaVersion = 1
+name = "Market Rate USDC"
+maxTaskDuration = "0s"
+schedule = "CRON_TZ=UTC @every 29m"
+observationSource = """
+    fetch        [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=3408&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    parse        [type="jsonparse" path="data,3408,quote,USD,price" data="$(fetch)"]
+    multiply     [type="multiply" input="$(parse)" times=1000000000000000000]
+    encode_data  [type="ethabiencode" abi="(uint256 value)" data="{ \\"value\\": $(multiply) }"]
+    encode_tx    [type="ethabiencode"
+                  abi="fulfillMarketRate(bytes token, bytes32 data)"
+                  data="{\\"data\\": $(encode_data),\\"token\\": \\"WUSDC\\"}"
+                 ]
+    submit_tx    [type="ethtx" to="0xB34a88f1Df62029f3c7DfF573b679Af6c9FF5cA3" data="$(encode_tx)"]
+
+    fetch -> parse -> multiply -> encode_data -> encode_tx -> submit_tx
+"""

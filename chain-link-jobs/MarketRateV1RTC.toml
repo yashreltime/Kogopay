@@ -1,0 +1,45 @@
+type = "cron"
+schemaVersion = 1
+name = "Market Rate-SWAP-V1"
+maxTaskDuration = "0s"
+schedule = "CRON_TZ=UTC @every 10m"
+observationSource = """
+    fetch        [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=1,825,1027,1839,3408&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_rtc    [type="http" method=GET url="https://reltime-ecosystem-be-staging.devtomaster.com/api/common/fetch_rtcprice"]
+    fetch_rto    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=EUR&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_gbp    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=GBP&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    parse_btc    [type="jsonparse" path="data,1,quote,USD,price" data="$(fetch)"]
+    parse_usdt   [type="jsonparse" path="data,825,quote,USD,price" data="$(fetch)"]
+    parse_eth    [type="jsonparse" path="data,1027,quote,USD,price" data="$(fetch)"]
+    parse_bnb    [type="jsonparse" path="data,1839,quote,USD,price" data="$(fetch)"]
+    parse_usdc   [type="jsonparse" path="data,3408,quote,USD,price" data="$(fetch)"]
+    parse_rtc    [type="jsonparse" path="data,price" data="$(fetch_rtc)"]
+    parse_rto    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_rto)"]
+    parse_gbp    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_gbp)"]
+    multiply_btc    [type="multiply" input="$(parse_btc)" times=1000000000000000000]
+    multiply_usdt   [type="multiply" input="$(parse_usdt)" times=1000000000000000000]
+    multiply_eth    [type="multiply" input="$(parse_eth)" times=1000000000000000000]
+    multiply_bnb    [type="multiply" input="$(parse_bnb)" times=1000000000000000000]
+    multiply_usdc   [type="multiply" input="$(parse_usdc)" times=1000000000000000000]
+    multiply_rtc    [type="multiply" input="$(parse_rtc)" times=1000000000000000000]
+    multiply_rto    [type="multiply" input="$(parse_rto)" times=1000000000000000000]
+    multiply_gbp    [type="multiply" input="$(parse_gbp)" times=1000000000000000000]
+    encode_data  [type="ethabiencode"
+                  abi="(uint256 btc,uint256 eth,uint256 bnb,uint256 usdt,uint256 usdc,uint256 rtc,uint256 rto,uint256 gbp)"
+                  data="{ \\"btc\\": $(multiply_btc),\\"eth\\": $(multiply_eth),\\"bnb\\": $(multiply_bnb),\\"usdt\\": $(multiply_usdt),\\"usdc\\": $(multiply_usdc),\\"rtc\\": $(multiply_rtc),\\"rto\\": $(multiply_rto),\\"gbp\\": $(multiply_gbp) }"]
+    encode_tx    [type="ethabiencode"
+                  abi="fulfillMarketRate(bytes data)"
+                  data="{\\"data\\": $(encode_data)}"
+                 ]
+    submit_tx    [type="ethtx" to="0xE37740926636d4b4ba8D9EBdaA5E0081a985425A" data="$(encode_tx)"]
+
+    fetch -> parse_btc -> multiply_btc -> encode_data
+    fetch -> parse_usdt -> multiply_usdt -> encode_data
+    fetch -> parse_eth -> multiply_eth -> encode_data
+    fetch -> parse_bnb -> multiply_bnb -> encode_data
+    fetch -> parse_usdc -> multiply_usdc -> encode_data
+    fetch_rtc -> parse_rtc -> multiply_rtc -> encode_data
+    fetch_rto -> parse_rto -> multiply_rto -> encode_data
+    fetch_gbp -> parse_gbp -> multiply_gbp -> encode_data
+    encode_data -> encode_tx -> submit_tx
+"""

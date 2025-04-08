@@ -1,0 +1,4353 @@
+{
+	"info": {
+		"_postman_id": "dba52f42-52c8-42a7-aed9-533be2fb4aec",
+		"name": "Reltime Ecosystem Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18754705"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"accessToken\", response.data.accessToken);",
+									"pm.environment.set(\"refreshToken\", response.data.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Origin",
+								"value": "0.0.0.0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin@reltime.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Tokens",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"accessToken\", response.data.accessToken);",
+									"pm.environment.set(\"refreshToken\", response.data.refreshToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{refreshToken}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/refresh",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Buy/P2P transfer",
+			"item": [
+				{
+					"name": "Build P2P Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sender\": \"mwuDs2ekfAVTgzAKHjSpJmnwCysmBQyzZ1\",\n    \"receiver\": \"n2PeNRVRowvnMamesyD6NLMtPz22xjh9KA\",\n    \"amount\": 0.00001,\n    \"coinCode\": \"BTC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnHash\", response.data.txnHash);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"receiver\": \"{{lender}}\",\n    \"amount\": 2,\n    \"coinCode\": \"RTO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/buy",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"buy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refill",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnHash\", response.data.txnHash);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 10,\n    \"coinCode\": \"RTC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/refill",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"refill"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Signed Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnHash\", response.data.txnHash);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"signedTxn\": \"0x00\",\n    \"chain\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/send",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Signed BTC Txn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnHash\", response.data.txnHash);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hexString\": \"01000000022fb95daa29d3593c8fc8a034c3d91145f5b86bd2af2b882531a2967d1db9f080010000006b483045022100e72140b1c0ac74af45c264ee5209d08c687c4ab5ad8916313250b09435ed27d402206d7755d93e5dd8813b7645e3c497f6a54d974f99b0350aef06a96052b55fc7b6812102a2c80e6f29649a4bc6515aabcb8a6443eb190d0f8c9cbffbee3fbb9710899d8afffffffff8496b9f76058e364b31eb427aebd806454da3f527b2c5f9ee7a30ebd25895ea000000006a4730440220650dc349b023202dd22fc7ea85f352494a2341e264e7fe6a519514741034cd1a022003be41aed0481f2746a1fc871f34a18514b6a06d3c43eaf4a9c86c10f654d58e812102a2c80e6f29649a4bc6515aabcb8a6443eb190d0f8c9cbffbee3fbb9710899d8affffffff02401f0000000000001976a914b3b828df9617997ac7008946e48c9f51ccfbf8c688ac4e550200000000001976a914552c087610ee64199552f40c5c45867290c9f12a88ac00000000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/send-btc",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"send-btc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"chain\":\"ETH\",\n    \"txnHash\": \"0x46df188eeca1ce640abb28fa5c92f7a720d168170041271fbe7f971850c2ee0d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"status"
+							],
+							"query": [
+								{
+									"key": "txnHash",
+									"value": "{{txnHash}}",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Approval For Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"spender\": \"{{RTO_ESCROW}}\",\n    \"amount\": 12,\n    \"action\": \"ADD\",\n    \"coinCode\": \"RTO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/approval",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"approval"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Allowance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"owner\": \"{{lender}}\",\n    \"spender\": \"{{RTO_ESCROW}}\",\n    \"coinCode\": \"RTO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/transaction/allowance",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"transaction",
+								"allowance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Services",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"signedTxn\", JSON.stringify(response.data.signedTxn));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"user\": \"{{lender}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Address at Index",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/address/0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"address",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/details/{{admin}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"details",
+								"{{admin}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/user/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\":\"{{admin}}\",\n    \"user\":\"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Lending Operations",
+			"item": [
+				{
+					"name": "Create Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"signedTxn\", JSON.stringify(response.data.signedTxn));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin-rto}}\",\n    \"proposalId\":6,\n    \"amount\":10,\n    \"interestRate\":10,\n    \"instalmentMonths\":3,\n    \"isCollateral\":false,\n    \"isDirect\":false,\n    \"isDirectAddress\":\"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal/admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"signedTxn\", JSON.stringify(response.data.signedTxn));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"proposalId\":20,\n    \"amount\":200,\n    \"interestRate\":10,\n    \"instalmentMonths\":3,\n    \"isCollateral\":false,\n    \"isDirect\":false,\n    \"isDirectAddress\":\"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal/admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Proposal Count",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\":\"{{admin-rto}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal/admin/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"admin",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Proposal at Index",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\":\"{{admin-rto}}\",\n    \"index\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal/admin/index",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"admin",
+								"index"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"signedTxn\", JSON.stringify(response.data.signedTxn));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\":\"{{admin}}\",\n    \"proposalId\":21\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal/admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lending Operations",
+			"item": [
+				{
+					"name": "Create Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"proposalId\":8,\n    \"amount\":7,\n    \"interestRate\":1,\n    \"instalmentMonths\":3,\n    \"isCollateral\":true,\n    \"isDirect\":true,\n    \"isDirectAddress\":\"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"proposalId\":0,\n    \"amount\":2,\n    \"interestRate\":10,\n    \"instalmentMonths\":3,\n    \"isCollateral\":false,\n    \"isDirect\":false,\n    \"isDirectAddress\":\"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Proposal Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/proposal/details/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"details",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Proposal Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/proposal/{{lender}}/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"{{lender}}",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Proposal at Index",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/proposal/0x1D0a9BCD31fEE726726d5Fa3f9971Bd2e38215d0/0",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"0x1D0a9BCD31fEE726726d5Fa3f9971Bd2e38215d0",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Proposal Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/proposal/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\":\"{{lender}}\",\n    \"proposalId\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/proposal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"proposal"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Borrow Operations",
+			"item": [
+				{
+					"name": "Send Borrow Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\": 6,\n    \"isCollateral\": false,\n    \"accept\": false,\n    \"collateralAmount\": 12.00000000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/borrow/confirm",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"borrow",
+								"confirm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Collateral",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 300,\n    \"interest\":10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/borrow/collateral",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"borrow",
+								"collateral"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Instalment Operations",
+			"item": [
+				{
+					"name": "Calculate Monthly Instalment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/monthly-amount",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"monthly-amount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Pending Collateral",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\":1,\n    \"unitPrice\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/pending-collateral",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"pending-collateral"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pending Instalment Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/pending-instalments",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"pending-instalments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pending Tokens Amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/pending-tokens",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"pending-tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pay Monthly Instalment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\": 0,\n    \"instalmentCount\": 1,\n    \"instalmentAmount\": 3.38904257,\n    \"paymentAddress\": \"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/pay",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"pay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pay Delayed Monthly Instalment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"proposalId\": 0,\n    \"collateral\": \"RTO\",\n    \"unitPrice\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/pay-collateral",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"pay-collateral"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Full Payment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\": 9,\n    \"amount\": 10,\n    \"paymentAddress\":\"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/one-time",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"one-time"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Proposal Close Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"proposalId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/close-status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"close-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Close Proposal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"proposalId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/instalment/close",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"instalment",
+								"close"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Common Operations",
+			"item": [
+				{
+					"name": "Get Admin Share",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/common/admin-share/RTO",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"common",
+								"admin-share",
+								"RTO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Admin Address",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"0xeC9E25D0e3A2099648D1B395780794C241f5F13a\",\n    \"code\": \"RTO\",\n    \"admin\": \"0x0bc15e7ec43f1d6bc2a38be49a488e103eaee48c\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/common/admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"common",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/common/owner/PROPOSAL",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"common",
+								"owner",
+								"PROPOSAL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Balance",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\":\"{{lender}}\",\n    \"coinCode\":\"RTO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/common/balance",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"common",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Batch Balance",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"addresses\":[\"{{lender}}\",\"{{borrower}}\"],\n    \"coinCode\":\"RTO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/common/batch_balance",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"common",
+								"batch_balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Admin Share",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"share\": 20,\n    \"contract\": \"REGISTRY\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/common/admin-share",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"common",
+								"admin-share"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Market Operations",
+			"item": [
+				{
+					"name": "Earnings Summary",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 300,\n    \"interest\": 10,\n    \"duration\": 6\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/earnings",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"earnings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Collateral Interest Factor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"factor\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/collateral-interest-factor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"collateral-interest-factor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Collateral Percentage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"percentage\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/collateral-percentage",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"collateral-percentage"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Maximum Delayed Instalment Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"count\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/max-delay-count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"max-delay-count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Contract Addresses (For initial setup)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"contract\": \"REGISTRY\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/set",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"set"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Escrow Contract Roles (For initial setup)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{admin}}\",\n    \"code\":\"RTO\",\n    \"depositer\": \"0x0170090700674e59688a5dC11b6723C519C1aA03\",\n    \"withdrawer\": \"0x0170090700674e59688a5dC11b6723C519C1aA03\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/roles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw Escrow Funds",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"0x2b2de8736cd3a1032e065053f2276e343f186737\",\n    \"receiver\": \"0x437bdfbc82e371806a126ca4db59c26387d39790\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/market/withdraw-escrow-fund",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"withdraw-escrow-fund"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Market Collateral Params",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/market/collateral-details",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"market",
+								"collateral-details"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Joint Account",
+			"item": [
+				{
+					"name": "Create New Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": 1,\n    \"from\": \"{{lender}}\",\n    \"members\": [\"{{borrower}}\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Account Address",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"JOINT_ACCOUNT\", JSON.stringify(response.data.accountAddress));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Members List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account\": {{JOINT_ACCOUNT}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/members",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invites List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account\": {{JOINT_ACCOUNT}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/invites",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"invites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Members Count",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account\": {{JOINT_ACCOUNT}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/count",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Owner",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account\": {{JOINT_ACCOUNT}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/owner",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"owner"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invite New Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"members\": [\"{{borrower}}\",\"{{rejector}}\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/invite",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"invite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join Or Reject",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"isAccepted\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/join",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"join"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"member\": \"{{borrower}}\",\n    \"role\": \"DEPOSIT_ROLE\",\n    \"isGranted\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/role",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deposit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"amount\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/deposit",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"deposit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"amount\": 1,\n    \"to\": \"{{lender}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/withdraw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"member\": \"{{rejector}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/remove",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"amount\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/approve",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activte or Deactivate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"isDeleted\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Withdraw Full Amount",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/withdraw-full",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"withdraw-full"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer Ownership",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"newOwner\": \"{{borrower}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/ownership",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"ownership"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Root Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{borrower}}\",\n    \"account\": {{JOINT_ACCOUNT}},\n    \"newOwner\": \"{{lender}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/root-admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"root-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upgrade Joint Account Implementation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"0x212e615a671e3f56E549FE70E33274c358173D2a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/joint-account/upgrade",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"joint-account",
+								"upgrade"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bridging Operations",
+			"item": [
+				{
+					"name": "Mint Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"USDC\",\n    \"chain\": \"Ethereum (rinkeby)\",\n    \"toAddress\": \"0xec9e25d0e3a2099648d1b395780794c241f5f13a\",\n    \"fromAddress\": \"0xb32ef882fe19bf9a244e9dd8c66ad05a361cfaa5\",\n    \"value\": \"10\",\n    \"txHash\": \"0xc79f07cd87fc0afcb646a7565a45685032f02fd56122f9eb0f370b1814d1e8c1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/bridge/mint",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"bridge",
+								"mint"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mint Checkup Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/bridge/mint-check-up",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"bridge",
+								"mint-check-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Burn Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"burn\",\n    \"code\": \"WBTC\",\n    \"chain\": \"Reltime (testnet)\",\n    \"toAddress\": \"0xec9e25d0e3a2099648d1b395780794c241f5f13a\",\n    \"fromAddress\": \"0xb32ef882fe19bf9a244e9dd8c66ad05a361cfaa5\",\n    \"value\": \"0.00001\",\n    \"txHash\": \"0xc79f07cd87fc0afcb646a7565a45685032f02fd56122f9eb0f370b1814d1e8c1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/bridge/burn",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"bridge",
+								"burn"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Burn Checkup Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/bridge/burn-check-up",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"bridge",
+								"burn-check-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create BTC Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/bridge/btc-admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"bridge",
+								"btc-admin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Swap Operations",
+			"item": [
+				{
+					"name": "Unit Price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"WETH\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/price",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"price"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Swap Summary",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fromToken\": \"WETH\",\n    \"toToken\": \"WBTC\",\n    \"fromAmount\": 1,\n    \"toAmount\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/summary",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Approval For Swap Txn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"{{lender}}\",\n    \"amount\": 10,\n    \"token\": \"WETH\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/approval",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"approval"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init Swap",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 0,\n    \"from\": \"0xead2288a5ce91bdc9b5943e4681f098f85b3e0ff\",\n    \"fromToken\": \"RTO\",\n    \"toToken\": \"WETH\",\n    \"fromAmount\": \"0.50000000\",\n        \"toAmount\": \"0.00039314\",\n}\n\n{\n        \"fromToken\": \"RTO\",\n        \"toToken\": \"WETH\",\n        \"fromAmount\": \"0.50000000\",\n        \"toAmount\": \"0.00039314\",\n        \"swapFee\": \"0.00000000\"\n    },",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/init",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"init"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Swap Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = JSON.parse(responseBody);",
+									"pm.environment.set(\"txnBuild\", JSON.stringify(response.data.txnBuild));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"WETH\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/token-admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"token-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Token Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"WETH\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/token-admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"token-admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Token Contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"WBTC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/token-contract",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"token-contract"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Token Contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"WETH\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/token-contract",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"token-contract"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Oracle Contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/swap/oracle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"oracle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Oracle Contract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oracle\": \"0x5cBc7328e87c2E67D56E2dEb25Ea802A3d9E803a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/oracle",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"oracle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Consumer Address",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/swap/oracle-consumer",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"oracle-consumer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Consumer on Oracle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/swap/oracle-consumer",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"oracle-consumer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Node Permission on Oracle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/swap/oracle-node",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"oracle-node"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Swap Fee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/swap/fee",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"fee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Swap Fee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fee\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/swap/fee",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"swap",
+								"fee"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "KMS Address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"coinCode\": \"RTC\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/transaction/mock",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"transaction",
+						"mock"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SIGN and SEND",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = JSON.parse(responseBody);",
+							"pm.environment.set(\"txnHash\", response.data.txnHash);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"txnBuild\": {{txnBuild}},\n    \"signer\": \"LENDER\",\n    \"chain\": \"RTC\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/transaction/signer",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"transaction",
+						"signer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mint Wrapped Tokens",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = JSON.parse(responseBody);",
+							"pm.environment.set(\"txnHash\", response.data.txnHash);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{accessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"receiver\": \"{{lender}}\",\n    \"token\": \"WETH\",\n    \"amount\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/api/swap/mint",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"swap",
+						"mint"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Exchange Rate",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "X-CMC_PRO_API_KEY",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "4dd044b1-26f6-44fd-8a2d-b7a6c109d24a",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=18892",
+					"protocol": "https",
+					"host": [
+						"pro-api",
+						"coinmarketcap",
+						"com"
+					],
+					"path": [
+						"v2",
+						"cryptocurrency",
+						"quotes",
+						"latest"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "18892"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://reltime-ecosystem-be-dev.devtomaster.com",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,45 @@
+type = "cron"
+schemaVersion = 1
+name = "Market Rate-SWAP-V2"
+maxTaskDuration = "0s"
+schedule = "CRON_TZ=UTC @every 12m"
+observationSource = """
+    fetch_kwd    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=KWD&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_bhd    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=BHD&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_omr    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=OMR&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_jod    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=JOD&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_chf    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=CHF&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_cad    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=CAD&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    fetch_eur    [type="http" method=GET url="https://pro-api.coinmarketcap.com/v2/tools/price-conversion?amount=1&symbol=EUR&convert=USD&CMC_PRO_API_KEY=90f9b1c5-8255-4424-9e44-5c8f219da0ad"]
+    parse_kwd    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_kwd)"]
+    parse_bhd    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_bhd)"]
+    parse_omr    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_omr)"]
+    parse_jod    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_jod)"]
+    parse_chf    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_chf)"]
+    parse_cad    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_cad)"]
+    parse_eur    [type="jsonparse" path="data,0,quote,USD,price" data="$(fetch_eur)"]
+    multiply_kwd    [type="multiply" input="$(parse_kwd)" times=1000000000000000000]
+    multiply_bhd    [type="multiply" input="$(parse_bhd)" times=1000000000000000000]
+    multiply_omr    [type="multiply" input="$(parse_omr)" times=1000000000000000000]
+    multiply_jod    [type="multiply" input="$(parse_jod)" times=1000000000000000000]
+    multiply_chf    [type="multiply" input="$(parse_chf)" times=1000000000000000000]
+    multiply_cad    [type="multiply" input="$(parse_cad)" times=1000000000000000000]
+    multiply_eur    [type="multiply" input="$(parse_eur)" times=1000000000000000000]
+    encode_data  [type="ethabiencode"
+                  abi="(uint256 kwd,uint256 bhd,uint256 omr,uint256 jod,uint256 chf,uint256 cad,uint256 eur)"
+                  data="{ \\"kwd\\": $(multiply_kwd),\\"bhd\\": $(multiply_bhd),\\"omr\\": $(multiply_omr),\\"jod\\": $(multiply_jod),\\"chf\\": $(multiply_chf),\\"cad\\": $(multiply_cad),\\"eur\\": $(multiply_eur) }"]
+    encode_tx    [type="ethabiencode"
+                  abi="fulfillMarketRateV2(bytes data)"
+                  data="{\\"data\\": $(encode_data)}"
+                 ]
+    submit_tx    [type="ethtx" to="0xE37740926636d4b4ba8D9EBdaA5E0081a985425A" data="$(encode_tx)"]
+
+    fetch_kwd -> parse_kwd -> multiply_kwd -> encode_data
+    fetch_bhd -> parse_bhd -> multiply_bhd -> encode_data
+    fetch_omr -> parse_omr -> multiply_omr -> encode_data
+    fetch_jod -> parse_jod -> multiply_jod -> encode_data
+    fetch_chf -> parse_chf -> multiply_chf -> encode_data
+    fetch_cad -> parse_cad -> multiply_cad -> encode_data
+    fetch_eur -> parse_eur -> multiply_eur -> encode_data
+    encode_data -> encode_tx -> submit_tx
+"""

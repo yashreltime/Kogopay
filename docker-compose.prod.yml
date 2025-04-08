@@ -1,0 +1,26 @@
+version: "3"
+services:
+  rabbitmq:
+    container_name: reltime-ecosystem-rabbitmq
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq-backend"
+    ports:
+      - "15677:15672"
+      - "5677:5672"
+      - "1888:1883"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    restart: always
+  api:
+    container_name: ecosystem_backend
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    network_mode: host
+    volumes:
+      - /usr/app/node_modules
+    depends_on:
+      - rabbitmq
+    env_file:
+      - .env
+    restart: always
